@@ -26,7 +26,7 @@ public class Program
 
 
             //
-            // НУЖНО ВЕРНУТЬ ЗНАЧЕНИЕ МЕТОДОВ
+            // НУЖНО ВЕРНУТЬ ЗНАЧЕНИЕ МЕТОДОВ "FirstAttack" и "SecondAttack"
             //
 
 
