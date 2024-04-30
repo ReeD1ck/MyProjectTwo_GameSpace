@@ -1,4 +1,4 @@
-﻿using DocumentFormat.OpenXml.Wordprocessing;
+using DocumentFormat.OpenXml.Wordprocessing;
 using MiNET.Effects;
 
 namespace Base;
@@ -128,19 +128,5 @@ public class Program
                 VisibilityRange = 65;
             }
         }
-        //public class Isis : BaseShip
-//{
-//public class Isis : BaseShip
-//{
-   // public Isis()
-    //{
-     //   Name = "Isis"; //изида на васпе
-     //   Speed = 80;
-      //  Damage = 10;
-      //  Health = 80;
-      //  Shield = 120;
-      //  HealthRegen = Health + 10;
-      //  VisionRange = 120;
-      //  VisibilityRange = 30;
-    //}
+    }
 }
