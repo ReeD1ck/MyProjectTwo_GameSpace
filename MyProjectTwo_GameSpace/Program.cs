@@ -1,5 +1,4 @@
-using DocumentFormat.OpenXml.Wordprocessing;
-using MiNET.Effects;
+using static Base.Program.FightArbiter;
 
 namespace Base;
 
@@ -8,9 +7,18 @@ public class Program
 
     private static void Main(string[] args)
     {
-        //
-        // ВОЗВРАТИТЬ ЗНАЧЕНИЕ ИЗ Fight
-        //
+        var first = new Twins();
+        var second = new Railgun();
+        var win = new FightArbiter(first, second);
+ 
+
+        var firstWins = win.FirstAttack();
+        Console.WriteLine(firstWins);
+
+        //var secondWins = win.SecondAttack();
+        //Console.WriteLine(secondWins);
+
+
     }
 
     public class FightArbiter
@@ -18,66 +26,117 @@ public class Program
         private readonly BaseShip _first;
         private readonly BaseShip _second;
 
-        public void Fight()
+        public FightArbiter(BaseShip first, BaseShip second)
+        {
+            _first = first;
+            _second = second;
+        }
+
+
+        public string Fight()
         {
             var random = new Random();
             var Flipcoin = random.Next(0, 100);
             var result = Flipcoin % 2 == 0;
 
-
-            //
-            // НУЖНО ВЕРНУТЬ ЗНАЧЕНИЕ МЕТОДОВ "FirstAttack" и "SecondAttack"
-            //
-
-
-        }
-
-        public void FirstAttack()
-        {
-            var FirstDamage = _first.Damage;
-            var count = 0;
-
-            while (FirstDamage > 0)
+            if (result) //  -> ходит 1й
             {
-                var SecondShipShield = _second.Shield - FirstDamage;
-                if (_second.Shield == 0)
-                {
-                    var SecondShipHealth = _second.Health - FirstDamage;
-                    if (_second.Health > _second.Health / 2)
-                    {
-                        var SecondHealthRegen = _second.Health + 25;
-                        if (_second.Health == 0)
-                        {
-                            Console.WriteLine($"1й кораболь уничтожил 2й, на это ему понадобилось {FirstDamage * count} урона");
-                            break;
-                        }
-                    }
-                }
-                count++;
+                var firstWins = FirstAttack();
+                Console.WriteLine("Wins Twins");
+                return firstWins;
+
+            }
+            else
+            {
+                var secondWin = SecondAttack();
+                Console.WriteLine("Wins Twins");
+                return secondWin;
             }
         }
-        public void SecondAttack()
-        {
-            var SecondDamage = _second.Damage;
-            var count = 0;
 
-            while (SecondDamage > 0)
+        public string FirstAttack()
+        {
+            var count = 0;
+            while (true)
             {
-                var FirstShipShield = _first.Shield - SecondDamage;
-                if (_first.Shield == 0)
+                count++;
+                if ((_second.Shield <= 0) & (_second.Health <= 0))
                 {
-                    var FirstShipHealth = _first.Health - SecondDamage;
-                    if (_first.Health > _first.Health / 2)
+                    Console.WriteLine("Победа Twins");
+                    return $"1й кораболь уничтожил 2й, на это ему понадобилось {_first.Damage * count} урона";
+                }
+                else
+                {
+                    if ((_second.Shield > 0) || (_second.Health > 0))
                     {
-                        var FirstHealthRegen = _second.Health + 25;
-                        if (_first.Health == 0)
+                        if (_second.Shield > 0)
                         {
-                            Console.WriteLine($"2й кораболь уничтожил 1й, на это ему понадобилось {SecondDamage * count} урона");
-                            break;
+                            _second.Shield = _second.Shield - _first.Damage;
+
+                            if (_second.Shield == _first.Damage)
+                            {
+                                _second.Shield = _second.Shield - _first.Damage;
+                            }
+                            else
+                                continue;
                         }
+                        else
+                        {
+                            _second.Health = _second.Health - _first.Damage;
+
+                            if (_second.Health == _first.Damage)
+                            {
+                                _second.Health = _second.Health - _first.Damage;
+                            }
+                            else
+                                continue;
+                        }
+
                     }
                 }
+            }
+        }
+
+        public string SecondAttack()
+        {
+            var count = 0;
+            while (true)
+            {
                 count++;
+                if ((_first.Shield <= 0) & (_first.Health <= 0))
+                {
+                    Console.WriteLine("Победа Railgun");
+                    return $"2й кораболь уничтожил 1й, на это ему понадобилось {_second.Damage * count} урона";
+                }
+                else
+                {
+                    if ((_first.Shield > 0) || (_first.Health > 0))
+                    {
+                        if (_first.Shield > 0)
+                        {
+                            _first.Shield = _first.Shield - _second.Damage;
+
+                            if (_first.Shield == _first.Damage)
+                            {
+                                _first.Shield = _first.Shield - _second.Damage;
+                            }
+                            else
+                                continue;
+                        }
+                        else
+                        {
+                            _first.Health = _first.Health - _second.Damage;
+
+                            if (_first.Health == _second.Damage)
+                            {
+                                _first.Health = _first.Health - _second.Damage;
+                            }
+                            else
+                                continue;
+                        }
+
+                    }
+                }
             }
         }
 
@@ -101,14 +160,14 @@ public class Program
         }
         public class Twins : BaseShip
         {
-            public Twins()
+            public Twins() //         1й
             {
                 Name = "Twins"; //твинс на мамонте
                 Speed = 40;
                 Damage = 15;
                 Health = 150;
                 Shield = 100;
-                HealthRegen = Health + 25;
+                //HealthRegen = Health + 25;
                 VisionRange = 100;
                 VisibilityRange = 80;
 
@@ -116,14 +175,14 @@ public class Program
         }
         public class Railgun : BaseShip
         {
-            public Railgun()
+            public Railgun() //            2й
             {
                 Name = "Railgun"; //рельса на хорнете
                 Speed = 65;
                 Damage = 35;
                 Health = 90;
                 Shield = 100;
-                HealthRegen = Health + 15;
+                //HealthRegen = Health + 15;
                 VisionRange = 100;
                 VisibilityRange = 65;
             }
